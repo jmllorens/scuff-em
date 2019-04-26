@@ -49,6 +49,32 @@ PlaneWave::PlaneWave()
 
 PlaneWave::PlaneWave(const PlaneWave &PW)
 { 
+
+  // Copy the Base class attributes
+  Eps=PW.Eps;
+  Mu=PW.Mu;
+
+  // Omega is initialized to an absurd value to help catch cases
+  // in which GetFields() is called without a prior call to 
+  // SetFrequency()
+  Omega=PW.Omega;
+
+  // incident fields are non-periodic by default
+  if(LBasis)
+     LBasis->Copy(PW.LBasis);
+  if(RLBasis)
+     RLBasis->Copy(PW.RLBasis);
+  
+  LVolume=PW.LVolume;
+  RLVolume=PW.RLVolume;
+  memcpy(kBloch, PW.kBloch, 3*sizeof(double));
+
+  // field sources lie in the exterior region by default
+  RegionIndex = PW.RegionIndex;
+
+  Next = PW.Next;
+
+  // Copy PW attributes
   memcpy(E0, PW.E0, 3*sizeof(cdouble));
   memcpy(nHat, PW.nHat, 3*sizeof(double));
   SetRegionLabel(PW.RegionLabel);
