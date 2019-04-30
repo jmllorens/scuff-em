@@ -65,6 +65,7 @@ class IncField
 
    // constructor just initializes the simple fields
    IncField(); 
+   IncField(const IncField &IF);
    virtual ~IncField();
 
    void SetFrequency(cdouble Omega, bool Traverse=true);

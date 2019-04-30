@@ -57,6 +57,38 @@ IncField::IncField()
 }
 
 /***************************************************************/
+/* base class copy method **************************************/
+/***************************************************************/
+
+IncField::IncField(const IncField &IF)
+{
+  // Copy the Base class attributes
+  Eps=IF.Eps;
+  Mu=IF.Mu;
+
+  // Omega is initialized to an absurd value to help catch cases
+  // in which GetFields() is called without a prior call to 
+  // SetFrequency()
+  Omega=IF.Omega;
+
+  // incident fields are non-periodic by default
+  if(IF.LBasis)
+     LBasis->Copy(IF.LBasis);
+  if(IF.RLBasis)
+     RLBasis->Copy(IF.RLBasis);
+  
+  LVolume=IF.LVolume;
+  RLVolume=IF.RLVolume;
+  memcpy(kBloch, IF.kBloch, 3*sizeof(double));
+
+  // field sources lie in the exterior region by default
+  RegionIndex = IF.RegionIndex;
+
+  Next = IF.Next;
+
+}
+
+/***************************************************************/
 /* base class destructor ***************************************/
 /***************************************************************/
 IncField::~IncField()
