@@ -685,15 +685,15 @@ void scuffSolver::DoSolve(IncField *IF, cdouble *PortCurrents)
      if (CachedIF){
        delete CachedIF;
      }
-     if (dynamic_cast<PlaneWave*>(IF) == nullptr)
-     {
-      PointSource *PS = (PointSource *) IF;
-      CachedIF=new PointSource(*PS);
-     } 
-     if (dynamic_cast<PointSource*>(IF) == nullptr)
+     if (dynamic_cast<PlaneWave*>(IF) != nullptr)
      {
       PlaneWave *PW = (PlaneWave *) IF;
       CachedIF=new PlaneWave(*PW);
+     } 
+     if (dynamic_cast<PointSource*>(IF) != nullptr)
+     {
+      PointSource *PS = (PointSource *) IF;
+      CachedIF=new PointSource(*PS);
      }
    }
 
