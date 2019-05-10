@@ -66,24 +66,27 @@ IncField::IncField(const IncField &IF)
   Eps=IF.Eps;
   Mu=IF.Mu;
 
-  // Omega is initialized to an absurd value to help catch cases
-  // in which GetFields() is called without a prior call to 
-  // SetFrequency()
   Omega=IF.Omega;
 
-  // incident fields are non-periodic by default
-  if(IF.LBasis)
-     LBasis->Copy(IF.LBasis);
-  if(IF.RLBasis)
-     RLBasis->Copy(IF.RLBasis);
-  
-  LVolume=IF.LVolume;
-  RLVolume=IF.RLVolume;
-  memcpy(kBloch, IF.kBloch, 3*sizeof(double));
+  if(IF.LBasis) {
+    SetLattice(IF.LBasis);
+    LVolume=IF.LVolume;
+    RLVolume=IF.RLVolume;
+    SetkBloch(IF.kBloch);
+  } else {
+    LBasis=RLBasis=0;
+    LVolume=RLVolume=0;
+    kBloch[0]=kBloch[1]=kBloch[2]=0.0;
+  }
+  //memcpy(kBloch, IF.kBloch, 3*sizeof(double));
 
   // field sources lie in the exterior region by default
   RegionIndex = IF.RegionIndex;
-
+  if(IF.RegionLabel){
+    SetRegionLabel(IF.RegionLabel);
+  } else {
+    RegionLabel = NULL;
+  }
   Next = IF.Next;
 
 }
@@ -149,8 +152,7 @@ void IncField::SetFrequencyAndEpsMu(cdouble pOmega,
 /***************************************************************/
 void IncField::SetLattice(HMatrix *NewLBasis, bool Traverse)
 {
-  if (LBasis==0 || LBasis->NR!=3 || LBasis->NC != NewLBasis->NC)
-   { if (LBasis) delete LBasis;
+  if (LBasis==0 || LBasis->NR!=3 || LBasis->NC != NewLBasis->NC) { if (LBasis) delete LBasis;
      LBasis = new HMatrix(NewLBasis);
    };
   
@@ -167,7 +169,7 @@ void IncField::SetLattice(HMatrix *NewLBasis, bool Traverse)
 /***************************************************************/
 /***************************************************************/
 /***************************************************************/
-void IncField::SetkBloch(double *NewkBloch, bool Traverse)
+void IncField::SetkBloch(const double *NewkBloch, bool Traverse)
 { 
   if ( LBasis==0 )
    ErrExit("%s:%i: attempt to set kBloch in a non-periodic IncField");

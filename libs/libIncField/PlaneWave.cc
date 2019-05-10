@@ -53,7 +53,7 @@ PlaneWave::PlaneWave(const PlaneWave &PW) : IncField(PW)
   // Copy PW attributes
   memcpy(E0, PW.E0, 3*sizeof(cdouble));
   memcpy(nHat, PW.nHat, 3*sizeof(double));
-  SetRegionLabel(PW.RegionLabel);
+  //SetRegionLabel(PW.RegionLabel);
 }
 
 PlaneWave::~PlaneWave()
