@@ -82,10 +82,14 @@ IncField::IncField(const IncField &IF)
 
   // field sources lie in the exterior region by default
   RegionIndex = IF.RegionIndex;
-  if(IF.RegionLabel){
+  // As the method is only called to copy
+  // an object it is safe to nullify RegionLabel
+  // SetRegionLabel checks whether RegionLabel
+  // is already allocated
+  RegionLabel = NULL;
+  if(IF.RegionLabel)
+  {
     SetRegionLabel(IF.RegionLabel);
-  } else {
-    RegionLabel = NULL;
   }
   Next = IF.Next;
 
